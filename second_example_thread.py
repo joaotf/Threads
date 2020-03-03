@@ -13,6 +13,22 @@ class Jogador:
         self.money = money;
         self.status = status;
 
+def Sorte():
+    dado_1 = random.randint(1,6);
+    dado_2 = random.randint(1,6);
+    if(dado_1 == dado_2):
+        return "PRESO"
+    else:
+        return (dado_1+dado_2)
+        
+
+def Tabuleiro(Jogador):
+    while(Jogador.index != 99 and Jogador.status != "PRESO"):
+        sorte = Sorte();
+        if(sorte != "PRESO"):
+            tabuleiro[sorte] = Jogador.nickname;
+        
+
 if __name__ == "__main__":
     menu = int(input("Menu\n1)Jogar\n2)Sair\nOpção --> "))
     os.system("clear")
@@ -41,22 +57,10 @@ if __name__ == "__main__":
                     print("Jogador não encontrado!")
         if(submenu == 4):
             for a in jogadores:
-                while(a.status != "Preso" and tabuleiro[99] != a.nickname):
-                    dado_1 = random.randint(1,6)
-                    dado_2 = random.randint(1,6)
-                    if(dado_1 == dado_2):
-                        a.status = "Preso";
-                        dado_1 = random.randint(1,6)
-                        dado_2 = random.randint(1,6)
-                        if(dado_1 != dado_2):
-                            a.status = "Livre";
-                    elif(a.status == "Livre"):
-                        tabuleiro[a.index] = 0;
-                        a.index = dado_1 + dado_2;
-                        tabuleiro[a.index] = a.nickname;
-                        print(tabuleiro)
+                Tabuleiro(a)
         if(submenu == 5):
             os.system('clear')
             print("Saindo...")
             time.sleep(0.3)
             break;
+

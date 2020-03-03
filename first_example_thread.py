@@ -3,7 +3,7 @@ import random,time
 consonant = 0;
 vogal = 0;
 
-anne = [chr(random.randint(65,90)) for _ in range(0,5000)]
+anne = [chr(random.randint(65,90)) for _ in range(0,50)]
 
 def Count_Consonant(array,consonant):
     seconds_start = time.time()
@@ -27,7 +27,7 @@ def BubbleSort(array):
                 temp = array[i]
                 array[i] = array[i+1]
                 array[i+1] = temp
-    return print(f"Ordenação da Array --> Concluída\t\tSegundos --> {(time.time()-seconds_start)}")
+    return print(f"Ordenação da Array --> Concluída\t\tSegundos --> {(time.time()-seconds_start)}\n\n{anne}")
 
 consonant = Thread(target=Count_Consonant,args=[anne,consonant]);
 vogal = Thread(target=Count_Vogal,args=[anne,vogal]);

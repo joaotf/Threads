@@ -13,13 +13,16 @@ class Jogador:
         self.money = money;
         self.status = status;
 
+def Tabuleiro(Jogador):
+    print(Jogador.nickname)
+
 if __name__ == "__main__":
     menu = int(input("Menu\n1)Jogar\n2)Sair\nOpção --> "))
     os.system("clear")
     while(menu != 2):
         submenu = int(input("Menu dos Jogadores\n1) Adicionar jogador\n2) Listar jogadores\n3) Excluir jogador\n4) Start!\n5) Sair\nOpção --> "))
         if(submenu == 1):
-            os.system('clear')
+            os.system('clear')                      
             nickname = input("Digite o nickname --> ")
             jogadores.append(Jogador(nickname,0,0,"Livre"))
             print("Jogador adicionado com sucesso!")
@@ -41,20 +44,7 @@ if __name__ == "__main__":
                     print("Jogador não encontrado!")
         if(submenu == 4):
             for a in jogadores:
-                while(a.status != "Preso" and tabuleiro[99] != a.nickname):
-                    dado_1 = random.randint(1,6)
-                    dado_2 = random.randint(1,6)
-                    if(dado_1 == dado_2):
-                        a.status = "Preso";
-                        dado_1 = random.randint(1,6)
-                        dado_2 = random.randint(1,6)
-                        if(dado_1 != dado_2):
-                            a.status = "Livre";
-                    elif(a.status == "Livre"):
-                        tabuleiro[a.index] = 0;
-                        a.index = dado_1 + dado_2;
-                        tabuleiro[a.index] = a.nickname;
-                        print(tabuleiro)
+                Tabuleiro(a)
         if(submenu == 5):
             os.system('clear')
             print("Saindo...")

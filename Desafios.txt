@@ -29,3 +29,5 @@ H. Marque, de alguma forma, o jogador mais rápido e o mais rico.
 	- O programa deve fechar em 1min.
 	- A cada segundo o botao muda de localização
 	- A cada click o tempo de troca de localização do botao deve diminuir.
+
+	

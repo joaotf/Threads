@@ -1,34 +1,67 @@
 from threading import Thread
-import os
-import time
 import random
+import queue
+import time
+import os
 
-tabuleiro = [0 for _ in range(100)]
 jogadores = []
+resultado = list()
+numeros_random = [random.randint(1,6) for _ in range(500)]
+tabuleiro = [list() for s in range(100)]
 
 class Jogador:
-    def __init__(self,nickname,money,index,status):
-        self.nickname = nickname;
-        self.index = index;
-        self.money = money;
-        self.status = status;
+    def __init__(self,nickname):
+        self.nickname = nickname
+        self.money = 0
+        self.index = 0
+        self.status = "Livre"
+    
+    def Play(self):
+        dado1 = random.choice(numeros_random)
+        dado2 = random.choice(numeros_random)
+        print(f"Jogador: { self.nickname }\n    Dado 1: {dado1}\n    Dado 2: {dado2}")
+        return dado1,dado2
 
-def Sorte():
-    dado_1 = random.randint(1,6);
-    dado_2 = random.randint(1,6);
-    if(dado_1 == dado_2):
-        return "PRESO"
-    else:
-        return (dado_1+dado_2)
+    def Repeated(self,dados):
+        if self.status == "Livre" and dados[0] == dados[1]:
+            self.status = "Preso"
+            play_again = self.Play()
+            self.Repeated(play_again)
+        elif self.status == "Preso" and dados[0] != dados[1]:
+            play_again = self.Play()
+            self.Repeated(play_again)
+        elif self.status == "Preso" and dados[0] == dados[1]:
+            self.status = "Livre"
+        elif self.status == "Livre" and dados[0] != dados[1]:
+            if self.index+(dados[0]+dados[1]) >= len(tabuleiro):
+                self.index = len(tabuleiro)
+            else:
+                self.index = self.index +(dados[0] + dados[1])
+                if self.index % 2 == 0:
+                    self.money = (self.money + 79.99)
+                else:
+                    self.money = (self.money + 53.21)
+
+def Board(Jogador,First):
+    timer = time.time()
+    while(1):
+        Jogador.Repeated(Jogador.Play())
+        for i in tabuleiro:                                      
+                for j in i:
+                    if Jogador.nickname == j:
+                        i.remove(Jogador.nickname)
+        if(Jogador.index < len(tabuleiro)):       
+            tabuleiro[Jogador.index].append(Jogador.nickname)
+        else:
+            tabuleiro[len(tabuleiro)-1].append(Jogador.nickname)
+        print(tabuleiro)
         
-
-def Tabuleiro(Jogador):
-    while(Jogador.index != 99 and Jogador.status != "PRESO"):
-        sorte = Sorte();
-        if(sorte != "PRESO"):
-            tabuleiro[sorte] = Jogador.nickname;
+        if Jogador.index >= len(tabuleiro):
+            print(f"\nO jogador {Jogador.nickname} zerou o jogo!")
+            tempo = time.time() - timer;
+            First.put([Jogador.nickname,Jogador.money,tempo])
+            break
         
-
 if __name__ == "__main__":
     menu = int(input("Menu\n1)Jogar\n2)Sair\nOpção --> "))
     os.system("clear")
@@ -37,7 +70,8 @@ if __name__ == "__main__":
         if(submenu == 1):
             os.system('clear')
             nickname = input("Digite o nickname --> ")
-            jogadores.append(Jogador(nickname,0,0,"Livre"))
+            jogadores.append(Jogador(nickname))
+            os.system('clear')
             print("Jogador adicionado com sucesso!")
         if(submenu == 2):
             os.system('clear')
@@ -56,11 +90,35 @@ if __name__ == "__main__":
                 else:
                     print("Jogador não encontrado!")
         if(submenu == 4):
-            for a in jogadores:
-                Tabuleiro(a)
+            for q in jogadores:
+                tabuleiro[0].append(q.nickname)
+            first = queue.Queue()
+            thread_1 = Thread(target=Board,args=[jogadores[0],first])
+            thread_2 = Thread(target=Board,args=[jogadores[1],first])
+            thread_3 = Thread(target=Board,args=[jogadores[2],first])
+            thread_4 = Thread(target=Board,args=[jogadores[3],first])
+    
+            thread_1.start()
+            thread_2.start()
+            thread_3.start()
+            thread_4.start()
+            
+            thread_1.join()
+            thread_2.join()
+            thread_3.join()
+            thread_4.join()
+
+
+            for p in range(len(jogadores)):
+                resultado.append(first.get())
+            rico = max(resultado)
+            rapido = min(resultado)
+            print(f"\n\nO Jogador que obteve mais riquezas foi o {rico[0]} com um total de R${rico[1]}")
+            print(f"\nO Jogador que obteve o maior desempenho foi o {rapido[0]} com o tempo de {rapido[2]}")
+            break;
+                
         if(submenu == 5):
             os.system('clear')
             print("Saindo...")
-            time.sleep(0.3)
+            time.sleep(0.5)
             break;
-

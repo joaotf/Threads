@@ -4,7 +4,7 @@ import queue;
 
 resultado = []
 random = [r.randint(1,4) for _ in range(200)]
-tabuleiro = [0 for _ in range(100)]
+corrida = [0 for _ in range(100)]
 
 class Horse:
     def __init__(self,nome,index,status):
@@ -31,11 +31,11 @@ class Horse:
         while(playing):
             print(f"Horse: [{Horse.getNome()}]\nIndex: [{Horse.getIndex()}]\nStatus: [{Horse.getStatus()}]")
             movimento = r.choice(random)
-            if(Horse.getIndex()+movimento <= len(tabuleiro)-1):
-                tabuleiro[Horse.getIndex()] = 0;
-                if(Horse.getIndex() >= len(tabuleiro)-1):
-                    Horse.setIndex(len(tabuleiro)-1);
-                    tabuleiro[Horse.getIndex()] = Horse.getNome();
+            if(Horse.getIndex()+movimento <= len(corrida)-1):
+                corrida[Horse.getIndex()] = 0;
+                if(Horse.getIndex() >= len(corrida)-1):
+                    Horse.setIndex(len(corrida)-1);
+                    corrida[Horse.getIndex()] = Horse.getNome();
                     Horse.setStatus("Stopped")
                     print(f"Horse: [{Horse.getNome()}]\nIndex: [{Horse.getIndex()}]\nStatus: [{Horse.getStatus()}]")
                     Queue.put(f"Horse Race: {Horse.getNome()}")
@@ -43,14 +43,14 @@ class Horse:
                 else:
                     Horse.setIndex(Horse.getIndex()+movimento)
                     Horse.setStatus("Running")
-                    tabuleiro[Horse.getIndex()] = Horse.getNome()
+                    corrida[Horse.getIndex()] = Horse.getNome()
             else:
-                tabuleiro[len(tabuleiro)-1] = Horse.getNome();
+                corrida[len(corrida)-1] = Horse.getNome();
                 Horse.setStatus("Stopped")
                 Queue.put(f"Horse Race: {Horse.getNome()}")
                 break;
 
-            print(tabuleiro)
+            print(corrida)
 
 if __name__ == "__main__":
     horse_1 = Horse("João",0,"Running")

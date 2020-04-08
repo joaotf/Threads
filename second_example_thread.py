@@ -5,6 +5,8 @@ import time
 import os
 
 jogadores = []
+tempo = []
+dinheiro = []
 resultado = list()
 numeros_random = [random.randint(1,6) for _ in range(500)]
 tabuleiro = [list() for s in range(100)]
@@ -19,7 +21,7 @@ class Jogador:
     def Play(self):
         dado1 = random.choice(numeros_random)
         dado2 = random.choice(numeros_random)
-        print(f"Jogador: { self.nickname }\n    Dado 1: {dado1}\n    Dado 2: {dado2}")
+        print(f"\nJogador: { self.nickname }\n    Dado 1: {dado1}\n    Dado 2: {dado2}\n    Status: {self.status}\n    Posição: {self.index}\n    Dinheiro: {self.money}\n")
         return dado1,dado2
 
     def Repeated(self,dados):
@@ -57,31 +59,31 @@ def Board(Jogador,First):
         print(tabuleiro)
         
         if Jogador.index >= len(tabuleiro):
-            print(f"\nO jogador {Jogador.nickname} zerou o jogo!")
+            print(f"\nThread finalizada --> {Jogador.nickname}!\n")
             tempo = time.time() - timer;
             First.put([Jogador.nickname,Jogador.money,tempo])
             break
         
 if __name__ == "__main__":
     menu = int(input("Menu\n1)Jogar\n2)Sair\nOpção --> "))
-    os.system("clear")
+    os.system("cls")
     while(menu != 2):
         submenu = int(input("Menu dos Jogadores\n1) Adicionar jogador\n2) Listar jogadores\n3) Excluir jogador\n4) Start!\n5) Sair\nOpção --> "))
         if(submenu == 1):
-            os.system('clear')
+            os.system('cls')
             nickname = input("Digite o nickname --> ")
             jogadores.append(Jogador(nickname))
-            os.system('clear')
+            os.system('cls')
             print("Jogador adicionado com sucesso!")
         if(submenu == 2):
-            os.system('clear')
+            os.system('cls')
             if(len(jogadores) != 0):
                 for x in jogadores:
                     print(f"Nickname: {x.nickname} | Money: {x.money}\n")
             else:
                 print("Lista de jogadores vazia!")
         if(submenu == 3):
-            os.system('clear')
+            os.system('cls')
             excluir_player = input("Digite o nickname do jogador que você deseja excluir --> ")
             for y in jogadores:
                 if(excluir_player == y.nickname):
@@ -111,12 +113,19 @@ if __name__ == "__main__":
 
             for p in range(len(jogadores)):
                 resultado.append(first.get())
-            rico = max(resultado)
-            rapido = min(resultado)
-            print(f"\n\nO Jogador que obteve mais riquezas foi o {rico[0]} com um total de R${rico[1]}")
-            print(f"\nO Jogador que obteve o maior desempenho foi o {rapido[0]} com o tempo de {rapido[2]}")
-            break;
                 
+            for u in resultado:
+                dinheiro.append(u[1])
+                tempo.append(u[2])
+                print(f"| Jogador: {u[0]} | Tempo: {u[2]} | Montante: R${u[1]} |");
+
+            maximo = max(dinheiro)
+            minimo = min(tempo)
+            index = dinheiro.index(maximo)
+            index_tempo = tempo.index(minimo)
+            print(f"\nJogador mais rápido --> {resultado[index_tempo][0]}")
+            print(f"\nMontante mais valioso --> {maximo} pertencente à {resultado[index][0]}")
+            break;
         if(submenu == 5):
             os.system('clear')
             print("Saindo...")

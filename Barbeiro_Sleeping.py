@@ -34,14 +34,14 @@ class BarberShop:
     def enter_barber_shop(self, customer):
         mutex.acquire()
         print('-------------------------------------------------------')
-        print('[ENTRADA] - {0} entra na barbearia!'.format(customer.name))
+        print(f'[ENTRADA] - {customer.name} entra na barbearia!')
  
 
         if len(self.waitingCustomers) == self.numberOfSeats:
-            print('[SAÍDA] - Não há cadeiras restantes na barbearia, {0} está indo embora!'.format(customer.name))
+            print(f'[SAÍDA] - Não há cadeiras restantes na barbearia, {customer.name} está indo embora!')
             mutex.release()
         else:
-            print('[ESPERANDO] - {0} sentou na cadeira de espera!'.format(customer.name))
+            print(f'[ESPERANDO] - {customer.name} sentou na cadeira de espera!')
             self.waitingCustomers.append(c) 
             mutex.release() 
             barber.wake_up()
@@ -62,9 +62,9 @@ class Barber:
  
     def cut_hair(self, customer):
         self.barberWorkingEvent.clear()
-        print('[TRABALHANDO] - {0} está cortando o cabelo!'.format(customer.name))
+        print(f'[TRABALHANDO] - {customer.name} está cortando o cabelo!')
         time.sleep(4)
-        print('[FINALIZADO] - {0} finalizou o corte!'.format(customer.name))
+        print(f'[FINALIZADO] - {customer.name} finalizou o corte!')
 
 if __name__ == '__main__':
  
